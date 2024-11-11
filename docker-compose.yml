@@ -1,0 +1,6 @@
+﻿services:
+  simpleapi:
+    image: simpleapi
+    build:
+      context: .
+      dockerfile: SimpleAPI/Dockerfile
