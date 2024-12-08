@@ -142,7 +142,7 @@ app.MapGet("/files/{filename}", (string filename) =>
 {
     try
     {
-        var safeFilename = StripFilename(filename);
+        var safeFilename = Regex.Replace(filename, "[^a-zA-Z0-9.]", "");
         var filePath = Path.Combine("./files", safeFilename);
 
         if (!File.Exists(filePath))
