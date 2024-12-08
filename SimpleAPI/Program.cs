@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,7 @@ int? GetQueryParam(HttpRequest request, string key, Func<string, int> parser)
             return null;
         }
     }
+
     return null;
 }
 
@@ -58,6 +61,7 @@ int GetFibonacci(int n)
         a = b;
         b = temp;
     }
+
     return b;
 }
 
@@ -116,8 +120,15 @@ app.MapPost("/save", async (HttpRequest request) =>
             return Results.BadRequest("Invalid input");
         }
 
-        var safeFilename = StripFilename(data.Filename);
-        await File.WriteAllTextAsync(Path.Combine("./files", safeFilename), data.Content);
+        var absolutePath = Path.GetFullPath("./files");
+        var safeFilename = Regex.Replace(data.Filename, "[^a-zA-Z0-9.]", "");
+        var fullPath = Path.Combine(absolutePath, safeFilename);
+        if (Path.Exists(fullPath))
+        {
+            File.Delete(fullPath);
+        }
+
+        await File.WriteAllTextAsync(fullPath, data.Content);
 
         return Results.Ok(new Response("File saved successfully", 200));
     }
@@ -162,4 +173,5 @@ app.MapGet("/files", () =>
 app.Run();
 
 record Response(string Message, int Status);
+
 record SaveContentRequest(string Content, string Filename);
