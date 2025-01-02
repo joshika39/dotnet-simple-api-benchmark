@@ -20,3 +20,6 @@ You can access the API at [http://localhost:5109](http://localhost:5109).
 ### Endpoints
 
 Access the Swagger UI at [http://localhost:5109/swagger](http://localhost:5109/swagger) to see the available endpoints.
+
+> [!TIP]
+> In Swagger UI, you can test the endpoints directly from the browser. You can also see the request and response payloads. You can do POST, PUT, DELETE, and GET requests.
